@@ -1,23 +1,23 @@
+import numpy as np
 import pandas as pd
 from db_classes import Store
 from db_connection import insert_article, insert_articles
 
 
 def get_store():
-    df = pd.read_csv('data/store.csv',  encoding='cp949').astype(object).replace(np.nan, 'None')
-    # df = df.where(pd.notnull(df), None)
-    articles = []
-    # for row in df.itertuples():
-    for row in df.dataframe():
-        articles.append(Store(id=row[1],
-                        store_type=row[2],
-                        line=row[3],
-                        name=row[4],
-                        store_no=row[5],
-                        square_meter=row[6],
-                        start_date=row[7],
-                        end_date=row[8],
-                        price=row[10]
-                        ))
-    insert_articles(articles)
+    whole_store = pd.read_csv('data/store.csv')
+    store = pd.DataFrame(whole_store, columns=['store_name', 'start_date', 'end_date', 'rent_fee'])
+
+    whole_transfer = pd.read_csv('data/transfer_info.csv')
+    transfer = pd.DataFrame(whole_transfer, columns=['station_name', 'weekday', 'saturday', 'sunday'])
+
+    whole_card_sep = pd.read_csv('data/CARD_SUBWAY_MONTH_202109.csv')
+
+    #
+    print(whole_card_sep.groupby('station_no')['get_on'].sum())
+    # card_sep = pd.DataFrame(whole_card_sep.groupby('station_no'), columns=['date', 'line_no', 'station_no', 'get_on', 'get_off'])
+    # print(card_sep)
+
+
+
 get_store()
